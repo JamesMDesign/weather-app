@@ -4,6 +4,7 @@ import { ApiClient } from './apiClient';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
+import Container from 'react-bootstrap/Container'
 
 function App() {
 
@@ -64,7 +65,7 @@ function App() {
 
   function returnClouds() {
     const tempArr = [];
-    for(let i = 0; i < 8; i++) {
+    for (let i = 0; i < 8; i++) {
       const clouds = data.list && data.list[i].weather[0].main
       tempArr.push(clouds)
     }
@@ -73,20 +74,42 @@ function App() {
 
   function returnCloudsDescription() {
     const tempArr = [];
-    for(let i = 0; i < 8; i++) {
+    for (let i = 0; i < 8; i++) {
       const desc = data.list && data.list[i].weather[0].description
       tempArr.push(desc)
     }
     return tempArr
   }
 
+  function returnCodes() {
+    const tempArr = [];
+    for (let i = 0; i < 8; i++) {
+      const code = data.list && data.list[i].weather[0].icon
+      const codeWithUrl = "http://openweathermap.org/img/wn/" + code + "@2x.png"
+      const images = <img src={codeWithUrl} alt="" className="cloudImg" />
+      tempArr.push(images)
+    }
+    return tempArr
+  }
 
+  function returnSvgs() {
+    const tempArr = [];
+    for (let i = 0; i < 8; i++) {
+      const code = data.list && data.list[i].weather[0].icon
+      const codeWithUrl = "/assets/icons/animated/" + code + ".svg";
+      const images = <img src={codeWithUrl} alt="" className="cloudImg" />
+      tempArr.push(images)
+    }
+    return tempArr
+  }
 
   const times = returnTimes()
   const temps = returnTemps()
   const humids = returnHumidity()
   const clouds = returnClouds()
   const desc = returnCloudsDescription()
+  const code = returnCodes()
+  const svgs = returnSvgs()
 
   const buildTableHead = (arr) => {
     return arr.map((current) => (
@@ -132,80 +155,88 @@ function App() {
 
   return (
     <>
-      <div className="App">
-        <div className="search">
-          <input value={location}
-            onChange={event => setLocation(event.target.value)}
-            onKeyDown={searchLocation}
-            placeholder='Enter Location'
-            type="text" />
-        </div>
-        {data.list != undefined &&
-          <div className="container">
-            <div className="top">
-              <div className="location">
-                {/* remove checks!! */}
-                <p>{data.city.name}</p>
-                <div className="temp">
+
+      <div className="d-flex p-2">
+        <div className="App">
+          <div className="search">
+            <input value={location}
+              onChange={event => setLocation(event.target.value)}
+              onKeyDown={searchLocation}
+              placeholder='Enter Location'
+              type="text" />
+          </div>
+          {data.list != undefined &&
+            <div className="container">
+              <div className="top">
+                <div className="location">
+                  {/* remove checks!! */}
+                  <p>{data.city.name}</p>
+                  <div className="temp">
+                  </div>
                 </div>
-              </div>
-              <div className="time">
-                <h4>{nameDay} {date} {month}</h4>
-                <Table>
-                  <thead>
-                    <tr>
-                      <th>Time</th>
-                      {buildTableHead(times)}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>Temp</td>
-                      {buildTableCell(temps)}
-                    </tr>
-                  </tbody>
-                  <tbody>
-                    <tr>
-                      <td>Humidity</td>
-                      {buildTableCell(humids)}
-                    </tr>
-                  </tbody>
-                  <tbody>
-                    <tr>
-                      <td>sky</td>
-                      {buildTableCell(clouds)}
-                    </tr>
-                  </tbody>
-                  <tbody>
-                    <tr>
-                      <td>type</td>
-                      {buildTableCell(desc)}
-                    </tr>
-                  </tbody>
-                </Table>
-                {/* <h4>{temps}</h4> */}
-                {/* <h4> {nameDay} {date} {month} {timeOutput}</h4> */}
-              </div>
-              <div className="description">
-                <div className="currentInfo"><h3>current weather</h3></div>
-                <div className="bottom">
-                  <div className="feelsLike">
-                    <p>feels like</p>
-                    {data.list && <h4>{data.list[0].main.feels_like}°C</h4>}
-                  </div>
-                  <div className="humidity">
-                    <p>humidity</p>
-                    {data.list && <h4>{data.list[0].main.humidity}%</h4>}
-                  </div>
-                  <div className="wind">
-                    <p>wind speed</p>
-                    {data.list && <h4>{data.list[0].wind.speed} m/s</h4>}
+                <div className="time">
+                  <h4>{nameDay} {date} {month}</h4>
+                  <Table>
+                    <thead>
+                      <tr>
+                        <th>Time</th>
+                        {buildTableHead(times)}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Temp</td>
+                        {buildTableCell(temps)}
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <td>Humidity</td>
+                        {buildTableCell(humids)}
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <td>sky</td>
+                        {/* {buildTableCell(code)} */}
+                        {buildTableCell(svgs)}
+                        {/* {buildTableCell(clouds)} */}
+                      </tr>
+                    </tbody>
+                    <tbody>
+                      <tr>
+                        <td>type</td>
+                        {buildTableCell(desc)}
+                      </tr>
+                    </tbody>
+                  </Table>
+                  {/* <h4>{temps}</h4> */}
+                  {/* <h4> {nameDay} {date} {month} {timeOutput}</h4> */}
+                </div>
+                <div className="description">
+                  <div className="currentInfo"><h3>current weather</h3></div>
+                  <div className="bottom">
+                    <div className="feelsLike">
+                      <p>feels like</p>
+                      {/* {data.list && <h4>{data.list[0].main.feels_like}°C</h4>} */}
+                      <h4>{data.list[0].main.feels_like}°C</h4>
+                    </div>
+                    <div className="humidity">
+                      <p>humidity</p>
+                      {/* {data.list && <h4>{data.list[0].main.humidity}%</h4>} */}
+                      <h4>{data.list[0].main.humidity}%</h4>
+                    </div>
+                    <div className="wind">
+                      <p>wind speed</p>
+                      {/* {data.list && <h4>{data.list[0].wind.speed} m/s</h4>} */}
+                      <h4>{data.list[0].wind.speed} m/s</h4>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        }
+          }
+        </div>
       </div>
     </>
   );
