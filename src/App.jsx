@@ -155,7 +155,6 @@ function App() {
 
   return (
     <>
-
       <div className="d-flex p-2">
         <div className="App">
           <div className="search">
